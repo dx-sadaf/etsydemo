@@ -16,6 +16,10 @@
 
 
     <%= javascript_include_tag "application" %>
+    <%= javascript_include_tag "https://js.stripe.com/v2/" %>
+
+    <%= tag :meta, :name => "stripe-key", :content => ENV["STRIPE_PUBLIC_KEY"] %>
+
   </head>
   <body>
 
@@ -26,6 +30,7 @@
       <div class="row">
         <div class="col-lg-12">
           <%= bootstrap_flash %>
+
           <%= yield %>
         </div>
       </div><!--/row-->

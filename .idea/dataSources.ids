@@ -3,4 +3,7 @@
   <data-source source="LOCAL" name="Rails etsydemo: development" uuid="18796f9d-b267-48ec-82c9-778e3bf25bee">
     <database-info product="" version="" jdbc-version="" driver-name="" driver-version=""/>
   </data-source>
+  <data-source source="LOCAL" name="Rails etsydemo: production" uuid="8867c2cd-8137-459e-9b7c-71bd5ad386e8">
+    <database-info product="" version="" jdbc-version="" driver-name="" driver-version=""/>
+  </data-source>
 </component>

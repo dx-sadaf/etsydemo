@@ -42,3 +42,14 @@ body {
     font-size: 18px;
   }
 }
+
+.jumbotron {
+  background-image: image-url("jumbotron.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  h1, h2 {
+    font-family: guardian-egyptt, georgia, serif;
+    color:#fff;
+    text-shadow: 1px 1px  rgba(0,0,0,0.5);
+  }
+}

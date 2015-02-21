@@ -41,6 +41,10 @@ gem 'spring',        group: :development
 
 
 gem 'twitter-bootstrap-rails'
-
+gem "figaro"
 
 gem "paperclip", "~> 4.2"
+
+gem 'devise'
+
+gem 'stripe'

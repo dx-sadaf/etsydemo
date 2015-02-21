@@ -10754,10 +10754,7 @@ return jQuery;
 
 })( jQuery );
 (function() {
-  jQuery(function() {
-    $("a[rel~=popover], .has-popover").popover();
-    return $("a[rel~=tooltip], .has-tooltip").tooltip();
-  });
+  jQuery(function() {});
 
 }).call(this);
 (function() {
@@ -11538,6 +11535,10 @@ return jQuery;
     supported: browserSupportsTurbolinks,
     EVENTS: clone(EVENTS)
   };
+
+}).call(this);
+(function() {
+
 
 }).call(this);
 (function() {
