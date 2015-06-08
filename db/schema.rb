@@ -11,7 +11,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150220183018) do
+ActiveRecord::Schema.define(version: 20150314180507) do
+
+  create_table "categories", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
+  end
 
   create_table "listings", force: true do |t|
     t.string   "name"
@@ -24,7 +34,19 @@ ActiveRecord::Schema.define(version: 20150220183018) do
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
     t.integer  "user_id"
+    t.integer  "category_id"
   end
+
+  create_table "order_items", force: true do |t|
+    t.integer  "order_id"
+    t.integer  "quantity"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "listing_id"
+  end
+
+  add_index "order_items", ["listing_id"], name: "index_order_items_on_listing_id"
+  add_index "order_items", ["order_id"], name: "index_order_items_on_order_id"
 
   create_table "orders", force: true do |t|
     t.string   "address"
@@ -35,6 +57,15 @@ ActiveRecord::Schema.define(version: 20150220183018) do
     t.integer  "listing_id"
     t.integer  "buyer_id"
     t.integer  "seller_id"
+  end
+
+  create_table "reviews", force: true do |t|
+    t.integer  "rating"
+    t.text     "comment"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "user_id"
+    t.integer  "listing_id"
   end
 
   create_table "users", force: true do |t|

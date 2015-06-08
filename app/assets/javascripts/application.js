@@ -16,3 +16,4 @@
 //= require bootstrap_override
 //= require turbolinks
 //= require_tree .
+//= require jquery.raty

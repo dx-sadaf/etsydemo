@@ -1,4 +1,5 @@
 class OrdersController < ApplicationController
+
   before_action :set_order, only: [:show, :edit, :update, :destroy]
 
   before_action :authenticate_user!
@@ -14,18 +15,21 @@ class OrdersController < ApplicationController
   # GET /orders/new
   def new
     @order = Order.new
-    @listing = Listing.find(params[:listing_id])
+    @seller = User.find(params[:user_id])
+    @items = @cart.seller_items(params[:user_id])
   end
 
   # POST /orders
   # POST /orders.json
   def create
     @order = Order.new(order_params)
-    @listing = Listing.find(params[:listing_id])
+    @seller = User.find(params[:user_id])
+    @items = @cart.seller_items(params[:user_id])
 
-    @seller = @listing.user
+    total_amount = @items.inject(0) { |sum, item| sum + item.total_price }
 
-    @order.listing_id = @listing.id
+
+    #@order.listing_id = @listing.id
     @order.buyer_id = current_user.id
     @order.seller_id = @seller.id
 
@@ -36,7 +40,7 @@ class OrdersController < ApplicationController
 
       begin
         charge = Stripe::Charge.create(
-            :amount => (@listing.price * 100).floor,  # amount in cents
+            :amount => (total_amount * 100).floor,  # amount in cents
             :currency => "usd",
             :card => token
         )
@@ -48,15 +52,37 @@ class OrdersController < ApplicationController
     end
 
     if @order.save
+
+      pp_hash = {}
+      i=1
+      @items.each do |item|
+        # save order items
+
+        OrderItem.new({order_id: @order.id, listing_id: item.product.id, quantity: item.quantity}).save!
+
+        # create has to be used with paypal...
+        pp_hash["amount_#{i}"] = item.product.price
+        pp_hash["item_name_#{i}"] = item.product.name
+        pp_hash["item_nunmber_#{i}"] = item.product.id
+        pp_hash["quantity_#{i}"] = item.quantity
+        i = i+1
+      end
+
+      session[:checking_out] = true
+
       if(params[:pay_using] == 'pp')
-        redirect_to OrdersHelper.paypal_url(listings_url, {"amount_1" => @listing.price,"item_name_1" => @listing.name,"item_number_1" => @listing.id,"quantity_1" => '1'} )
-        #render text: OrdersHelper.paypal_url(listings_url, {"amount_1" => @listing.price,"item_name_1" => @listing.name,"item_number_1" => @listing.id,"quantity_1" => '1'} )
+        redirect_to OrdersHelper.paypal_url(clear_cart_path(user_id: params[:user_id]), pp_hash )
+        #render text: OrdersHelper.paypal_url(listings_url, pp_hash )
       else
-        redirect_to @listing, notice: 'Order was successfully created.'
+        redirect_to clear_cart_path(user_id: params[:user_id]), notice: 'Order was successfully created.'
       end
     else
       render :new
     end
+
+  end
+
+  def thankyou
 
   end
 

@@ -23,6 +23,13 @@ body {
 
 }
 
+
+footer{
+  margin-top:50px;
+  height:100px;
+  border-top: 1px solid #EFEFEB;
+}
+
 .center {
   text-align: center;
 }
@@ -52,4 +59,24 @@ body {
     color:#fff;
     text-shadow: 1px 1px  rgba(0,0,0,0.5);
   }
+}
+
+.category-header{
+  h1, h2 {
+    font-family: guardian-egyptt, georgia, serif;
+    color:#d5641c;
+    text-shadow: 1px 1px rgba(0, 0, 0, 1);
+  }
+}
+
+.pagination{
+  float:right;
+}
+
+#review-form{
+  display:none;
+}
+
+.reviews-summary{
+  text-align:center
 }

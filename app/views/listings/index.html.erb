@@ -1,21 +1,38 @@
-<div class="jumbotron">
-  <h1>Handcrafted items from around the world.</h1>
-  <h2>Discover one-of-a-kind items</h2>
-</div>
+<% if params[:category].blank? %>
+    <div class="jumbotron">
+      <h1>Handcrafted items from around the world.</h1>
+      <h2>Discover one-of-a-kind items</h2>
+    </div>
+
+    <%= "<h1>Search Results</h1>".html_safe unless params[:s].blank? %>
+
+<% else %>
+
+    <div class="jumbotron category-header" style="background-image:url('<%= image_url @listings[0].category.image %>')">
+      <h1>Handcrafted items from around the world.</h1>
+      <h2>View all <%= @listings[0].category.name %> items</h2>
+    </div>
+
+    <h1><%= @listings.length %> <%= @listings[0].category.name %> items</h1>
+
+<% end %>
 
 <div class="center">
     <div class="row listing">
       <% @listings.each do |listing| %>
       <div class="col-sm-6 col-md-4 ">
         <div class="thumbnail">
+          <div class="caption">
+            <p><a href="<%= listings_path(category: listing.category.name) %>"><%= listing.category.name %></a></p>
+          </div>
           <%= link_to image_tag(listing.image.url(:medium)), listing_path(listing) %>
           <div class="caption">
             <h3><%= link_to listing.name, listing_path(listing)  %></h3>
-            <p><%= listing.description %></p>
-            <div class="center">
-              <%= link_to "Buy It Now", new_listing_order_path(listing), class: "btn btn-primary", data: { no_turbolink: true } %>
-            </div>
-            <p><%= number_to_currency(listing.price) %></p>
+            <p><%= listing.description[0...80] %>...</p>
+            <div class="center"><span class="star-rating" data-score="<%= listing.average_rating %>"></span> (<%= listing.reviews.length %> reviews)</div>
+            <div class="pull-left"><p><%= number_to_currency(listing.price) %></p></div>
+            <div class="pull-right"><%= link_to "Add to Cart", add_cart_path(listing),method: :post, class: "btn btn-primary", data: { no_turbolink: true } %></div>
+            <div class="clearfix"></div>
             <p><%= "Sold by #{listing.user.name}" %></p>
 
           </div>
@@ -27,6 +44,5 @@
 
 <br>
 
-<% if user_signed_in? %>
-    <%= link_to 'New Listing', new_listing_path, class: "btn btn-link" %>
-<% end %>
+<%= will_paginate @listings, renderer: BootstrapPagination::Rails %>
+

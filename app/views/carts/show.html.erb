@@ -1,0 +1,50 @@
+<h1>Your cart</h1>
+
+<% #@cart.clear
+  unless @cart.empty?
+    by_seller = @cart.by_sellers
+    by_seller.each do |seller, items | %>
+
+        <div class="panel panel-default">
+          <div class="panel-heading"><h4>Order to <%= User.find(seller.to_i).name %></h4></div>
+          <div class="panel-body">
+
+            <table class="table table-hover">
+              <thead>
+              <tr>
+                <th colspan="2">Product</th>
+                <th class="text-right">Quantity</th>
+                <th class="text-right">Unit Price</th>
+                <th class="text-right">Total Price</th>
+              </tr>
+              </thead>
+              <% total_price = 0 %>
+              <% items.each do |item| %>
+                  <tr>
+                    <td><%= image_tag item.product.image.url(:thumb) %></td>
+                    <td><%= link_to item.product.name, item.product %></td>
+                    <td class="text-right"><%= item.quantity %></td>
+                    <td class="text-right"><%= number_to_currency item.product.price %></td>
+                    <td class="text-right"><%= number_to_currency item.total_price%></td>
+                  </tr>
+                  <% total_price = total_price + item.total_price %>
+              <% end %>
+              <tfoot>
+              <tr>
+                <td colspan="5" class="text-right"><b>Total: <%= number_to_currency total_price %></b></td>
+              </tr>
+              </tfoot>
+            </table>
+            <div class="text-right">
+              <%= link_to "Proceed to Checkout", new_user_order_path(seller), class: "btn btn-primary", data: { no_turbolink: true } %>
+            </div>
+          </div>
+        </div>
+        <hr  />
+    <% end %>
+
+
+
+<% end %>
+
+

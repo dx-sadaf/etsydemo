@@ -1,14 +1,36 @@
 <div class="row">
-  <div class="col-md-4">
-    <div class="thumbnail">
-      <%= image_tag @listing.image.url %>
-    </div>
-    <h3><%= @listing.name %></h3>
-    <h4><%= number_to_currency(@listing.price) %></h4>
-  </div>
-  <div class="col-md-8">
+  <div class="col-md-6">
+    <table class="table table-hover">
+      <thead>
+      <tr>
+        <th colspan="2">Product</th>
+        <th class="text-right">Quantity</th>
+        <th class="text-right">Unit Price</th>
+        <th class="text-right">Total Price</th>
+      </tr>
+      </thead>
+      <% total_price = 0 %>
+      <% @items.each do |item| %>
+          <tr>
+            <td><%= image_tag item.product.image.url(:thumb) %></td>
+            <td><%= link_to item.product.name, item.product %></td>
+            <td class="text-right"><%= item.quantity %></td>
+            <td class="text-right"><%= number_to_currency item.product.price %></td>
+            <td class="text-right"><%= number_to_currency item.total_price%></td>
+          </tr>
+          <% total_price = total_price + item.total_price %>
+      <% end %>
+      <tfoot>
+      <tr>
+        <td colspan="5" class="text-right"><b>Total: <%= number_to_currency total_price %></b></td>
+      </tr>
+      </tfoot>
+    </table>
 
-    <%= form_for([@listing, @order]) do |f| %>
+  </div>
+  <div class="col-md-6">
+
+    <%= form_for([@seller, @order]) do |f| %>
         <% if @order.errors.any? %>
             <div id="error_explanation" class="alert alert-danger alert-dismissable">
               <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -53,11 +75,11 @@
               <div class="row">
                 <div class="col-md-8">
                   <%= label_tag :card_number, "Credit Card Number" %>
-                  <%= text_field_tag :card_number, nil, { :name => nil, :'data-stripe' => "number", class: "form-control" } %>
+                  <%= text_field_tag :card_number, nil, { :id =>'card_number', :name => nil, :'data-stripe' => "number", class: "form-control" } %>
                 </div>
                 <div class="col-md-4">
                   <%= label_tag :card_code, "CVC" %>
-                  <%= text_field_tag :card_code, nil, { :name => nil, :'data-stripe' => "cvc", class: "form-control" } %>
+                  <%= text_field_tag :card_code, nil, { :id =>'card_code', :name => nil, :'data-stripe' => "cvc", class: "form-control" } %>
                 </div>
               </div>
             </div>
@@ -65,10 +87,10 @@
               <%= label_tag nil, "Expiration Date" %>
               <div class="row">
                 <div class="col-md-3">
-                  <%= select_month nil, { use_two_digit_numbers: true }, { :name => nil, :'data-stripe' => "exp-month", class: "form-control" } %>
+                  <%= select_month nil, { use_two_digit_numbers: true }, { :id =>'card_month', :name => nil, :'data-stripe' => "exp-month", class: "form-control" } %>
                 </div>
                 <div class="col-md-3">
-                  <%= select_year nil, { start_year: Date.today.year, end_year: Date.today.year+10 }, { :name => nil, :'data-stripe' => "exp-year", class: "form-control" } %>
+                  <%= select_year nil, { start_year: Date.today.year, end_year: Date.today.year+10 }, { :id =>'card_year', :name => nil, :'data-stripe' => "exp-year", class: "form-control" } %>
                 </div>
               </div>
             </div>

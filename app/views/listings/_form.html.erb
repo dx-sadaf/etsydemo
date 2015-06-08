@@ -1,3 +1,4 @@
+<div class="col-md-6">
 <%= form_for @listing, :html => { :class => "form-horizontal listing", :multipart => true } do |f| %>
 
     <% if @listing.errors.any? %>
@@ -20,6 +21,12 @@
       <%= f.text_field :name, :class => 'form-control' %>
     <%= error_span(@listing[:name]) %>
   </div>
+
+    <div class="form-group">
+      <%= f.label :category_id, :class => 'control-label' %>
+      <%= f.collection_select :category_id, Category.all, :id, :name, {prompt: "Choose a category"}, {class: 'form-control'} %>
+      <%= error_span(@listing[:category_id]) %>
+    </div>
 
   <div class="form-group">
     <%= f.label :description, :class => 'control-label' %>
@@ -46,3 +53,4 @@
   </div>
 
 <% end %>
+</div>
